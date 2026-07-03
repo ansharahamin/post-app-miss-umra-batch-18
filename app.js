@@ -111,12 +111,26 @@ async function deletePost(event, id) {
   var card = event.target.parentNode.parentNode
   card.remove()
   try {
-    const { data, error } = await supabase.from('Post App Table').delete().eq('id', id)
+    const { data, error } = await supabase.from('Post App Table').delete().eq('id', id).select() 
     if (error) {
       console.log(error);
-    } else {
-
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Delete failed: " + error.message,
+      });
+      return
+    } 
+    console.log(data);
+    if (!data || data.length === 0 ) {
+      Swal.fire({
+        icon: "error",
+        title: "Not allowed",
+        text: "You can only delete your own posts!",
+      });
+      return
     }
+    card.remove()
   } catch (error) {
     console.log(error);
   }
@@ -147,6 +161,7 @@ async function post() {
       console.log(error);
     }
     email = user.email
+    user_id = user.id
     console.log(user.email);
   } catch (error) {
     console.log(error);
@@ -157,7 +172,7 @@ async function post() {
       if (editId !== null) {
         const { data, error } = await supabase
           .from('Post App Table')
-          .update({ title : title.value, description : description.value, img_bg: cardBg  })
+          .update({ title : title.value, description : description.value, img_bg: cardBg  , user_id :user_id})
           .eq('id', editId)
           .select()
           window.location.reload()
@@ -168,7 +183,7 @@ async function post() {
        
         const { data, error } = await supabase
           .from('Post App Table')
-          .insert({ title: title.value, description: description.value, img_bg: cardBg  , email:email})
+          .insert({ title: title.value, description: description.value, img_bg: cardBg  , email:email , user_id:user_id})
           .select('*')
         window.location.reload()
         if (error) {
