@@ -53,8 +53,10 @@
     width: 50px !important;      
     height: 50px !important;     
     border-radius: 50% !important; 
-    background-color: #38393a;
-    color: white;
+    background-color: #eef2f5;
+    color: palevioletred;
+    font-size: 24px;
+    font-weight: bold;
     border: none;
     cursor: pointer;
     

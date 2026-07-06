@@ -1,3 +1,4 @@
+
 let supabaseUrl = 'https://phgbkzvxbefidcrtagbt.supabase.co'
 let supabaseKey = 'sb_publishable_xbv5T3RlyRtRymBO3pY69A_lTr1vU0s'
 var supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
@@ -72,7 +73,8 @@ function renderPosts(posts, likes, comments) {
 
     postsDiv.innerHTML += `
     <div class="card mb-2" id="post-${post.id}">
-      <div class="card-header">${post.id} :${post.email} </div>
+      <div class="card-header">${post.id} : ${post.userName} </div>
+      <div class="card-header f-2 text-secondary"> ${post.email} </div>
       <div style="background-image:url(${post.img_bg})" class="card-body">
         <figure>
           <blockquote class="blockquote">
@@ -156,12 +158,10 @@ async function search() {
 }
 
 
+
 async function myInfo() {
   var box = document.getElementById("userInfoBox")
-  if (box.style.display === 'block') {
-    box.style.display = 'none'
-    return
-  }
+
   try {
     const { data: { user }, error } = await supabase.auth.getUser()
     if (error || !user) {
@@ -173,15 +173,33 @@ async function myInfo() {
       return
     }
 
-    document.getElementById("info-name").innerText = user.user_metadata.first_name || "N/A"
-    document.getElementById("info-email").innerText = user.email
-    document.getElementById("info-id").innerText = user.id
+    box.innerHTML = `
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">${user.user_metadata.first_name}'s Info</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>User ID:</strong> ${user.id}</p>
+            <p><strong>First Name:</strong> ${user.user_metadata.first_name}</p>
+          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" onclick="logout()">Logout</button>
+          </div>
+        </div>
+      </div>`
 
-    box.style.display = 'block'
+    // ✅ Bootstrap ke API se modal show karo
+    const modalInstance = new bootstrap.Modal(box)
+    modalInstance.show()
+
   } catch (error) {
     console.log(error.message)
   }
-
 }
 async function logout() {
 
@@ -254,6 +272,7 @@ async function post() {
     }
     email = user.email
     user_id = user.id
+    currentUserName = user.user_metadata.first_name
     console.log(user.email);
   } catch (error) {
     console.log(error);
@@ -264,7 +283,7 @@ async function post() {
       if (editId !== null) {
         const { data, error } = await supabase
           .from('Post App Table')
-          .update({ title: title.value, description: description.value, img_bg: cardBg, user_id: user_id })
+          .update({ title: title.value, description: description.value, img_bg: cardBg, user_id: user_id, userName: currentUserName })
           .eq('id', editId)
           .select()
         // window.location.reload()
@@ -282,7 +301,7 @@ async function post() {
 
         const { data, error } = await supabase
           .from('Post App Table')
-          .insert({ title: title.value, description: description.value, img_bg: cardBg, email: email, user_id: user_id })
+          .insert({ title: title.value, description: description.value, img_bg: cardBg, email: email, user_id: user_id,userName: currentUserName })
           .select('*')
         window.location.reload()
         if (error) {
