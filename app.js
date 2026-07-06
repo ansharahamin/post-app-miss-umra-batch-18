@@ -7,14 +7,19 @@ let email;
 var user_id;
 var currentUserId = null;
 var currentUserEmail = null;
-
+var currentUserName = null
 window.onload = async function () {
 
   try {
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
       currentUserId = user.id;
+      currentUserName = user.user_metadata.first_name
+     var firstLetter = currentUserName.charAt(0); 
+      console.log(currentUserName);
       console.log("Current User ID:", currentUserId);
+      var user_info = document.getElementById('MyProfile')
+      user_info.innerHTML = firstLetter
     } else {
       console.log("No user is currently logged in.");
     }
@@ -113,6 +118,7 @@ async function search() {
     if (user) {
       currentUserId = user.id;
       currentUserEmail = user.email;
+      currentUserName = user.user_metadata.first_name
       console.log("Current User ID:", currentUserId);
       console.log("Current User Email:", currentUserEmail);
     } else {
@@ -126,7 +132,7 @@ async function search() {
       .from('Post App Table')
       .select('*').order('id', { ascending: false })
       // .ilike('title', `%${searchInput}%`)
-      .or(`title.ilike.%${searchInput}%,description.ilike.%${searchInput}%, email.ilike.%${searchInput}%`)
+      .or(`title.ilike.%${searchInput}%,description.ilike.%${searchInput}%, email.ilike.%${searchInput}%,userName.ilike.%${searchInput}%`)
     console.log(posts);
     if(posts.length === 0) {
       console.log("No posts found.");
@@ -148,7 +154,37 @@ async function search() {
     console.log(error.message);
   }
 }
+
+
+async function myInfo() {
+  var box = document.getElementById("userInfoBox")
+  if (box.style.display === 'block') {
+    box.style.display = 'none'
+    return
+  }
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error || !user) {
+      Swal.fire({
+        icon: "info",
+        title: "Not logged in",
+        text: "Please login to view your info.",
+      });
+      return
+    }
+
+    document.getElementById("info-name").innerText = user.user_metadata.first_name || "N/A"
+    document.getElementById("info-email").innerText = user.email
+    document.getElementById("info-id").innerText = user.id
+
+    box.style.display = 'block'
+  } catch (error) {
+    console.log(error.message)
+  }
+
+}
 async function logout() {
+
   try {
     const { error } = await supabase.auth.signOut()
     if (error) {

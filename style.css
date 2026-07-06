@@ -49,3 +49,25 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
+#MyProfile {
+    width: 50px !important;      
+    height: 50px !important;     
+    border-radius: 50% !important; 
+    background-color: #38393a;
+    color: white;
+    border: none;
+    cursor: pointer;
+    
+    /* Centers text inside the circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Optional: adds a slight shadow */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
+  }
+  
+  /* Optional: changes appearance when clicked */
+  .circle-btn:hover {
+    background-color: #0056b3;
+  }
