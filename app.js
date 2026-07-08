@@ -277,6 +277,26 @@ async function post() {
   } catch (error) {
     console.log(error);
   }
+  let imageFile = document.getElementById("img_upload").files[0]
+  console.log(imageFile);
+ var img_url = '' 
+  var imageName = `${Date.now}`
+  if (imageFile) {
+const {  error: uploadError } = await supabase
+  .storage
+  .from('post')
+  .upload(imageName, imageFile, {
+    cacheControl: '3600',
+    upsert: false
+  })
+  if (uploadError) {
+    console.log(uploadError);
+  }
+  } else if(img_url){
+    
+  }else{
+alert('no img is selected')
+  }
   if (title.value.trim() && description.value.trim()) {
     try {
 
@@ -303,7 +323,7 @@ async function post() {
           .from('Post App Table')
           .insert({ title: title.value, description: description.value, img_bg: cardBg, email: email, user_id: user_id,userName: currentUserName })
           .select('*')
-        window.location.reload()
+        // window.location.reload()
         if (error) {
           console.log(error);
         }
@@ -314,7 +334,7 @@ async function post() {
       console.log(error);
     }
 
-    location.reload()
+    // location.reload()
 
 
 

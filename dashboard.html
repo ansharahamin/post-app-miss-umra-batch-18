@@ -53,6 +53,10 @@
             <img class="bgImg" onclick="selectImg('./images/3.jpg')" src="./images/3.jpg" alt="">
             <img class="bgImg" onclick="selectImg('./images/4.jpg')" src="./images/4.jpg" alt="">
             <img class="bgImg" onclick="selectImg('./images/5.webp')" src="./images/5.webp" alt="">
+            <label class="bgImg fw-5 w-5 h-5 d-flex align-items-center justify-content-center" for="img_upload" style="cursor:pointer;">
+              +
+              <input class="d-none" type="file" id="img_upload" accept="image/*">
+            </label>
           </div>
           <button id="post_btn" onclick="post()" type="submit" class="btn btn-primary ms-auto">
             Post
