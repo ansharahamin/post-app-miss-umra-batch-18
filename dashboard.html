@@ -48,6 +48,23 @@
             <textarea class="form-control" id="description" rows="3"></textarea>
           </div>
           <div class="mb-3 d-flex images justify-content-around">
+  <img class="bgImg" onclick="selectImg('./images/1.jpg')" src="./images/1.jpg" alt="">
+  <img class="bgImg" onclick="selectImg('./images/2.jpg')" src="./images/2.jpg" alt="">
+  <img class="bgImg" onclick="selectImg('./images/3.jpg')" src="./images/3.jpg" alt="">
+  <img class="bgImg" onclick="selectImg('./images/4.jpg')" src="./images/4.jpg" alt="">
+  <img class="bgImg" onclick="selectImg('./images/5.webp')" src="./images/5.webp" alt="">
+
+  <label class="bgImg upload-thumb" for="img_upload" id="uploadLabel" title="Upload your own image">
+    <svg id="uploadIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v12"></path>
+      <path d="M7 8l5-5 5 5"></path>
+      <path d="M5 21h14"></path>
+    </svg>
+    <input class="d-none" type="file" id="img_upload" accept="image/*" onchange="handleUploadPreview(event)">
+  </label>
+</div>
+          <!-- <div class="mb-3 d-flex images justify-content-around">
             <img class="bgImg" onclick="selectImg('./images/1.jpg')" src="./images/1.jpg" alt="">
             <img class="bgImg" onclick="selectImg('./images/2.jpg')" src="./images/2.jpg" alt="">
             <img class="bgImg" onclick="selectImg('./images/3.jpg')" src="./images/3.jpg" alt="">
@@ -57,7 +74,7 @@
               +
               <input class="d-none" type="file" id="img_upload" accept="image/*">
             </label>
-          </div>
+          </div> -->
           <button id="post_btn" onclick="post()" type="submit" class="btn btn-primary ms-auto">
             Post
           </button>

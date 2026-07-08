@@ -265,6 +265,8 @@ async function post() {
   var description = document.getElementById("description")
   console.log(title.value, description.value);
   var posts = document.getElementById("posts")
+    let imageFile = document.getElementById("img_upload").files[0]
+  console.log(imageFile);
   try {
     const { data: { user }, error } = await supabase.auth.getUser()
     if (error) {
@@ -273,15 +275,16 @@ async function post() {
     email = user.email
     user_id = user.id
     currentUserName = user.user_metadata.first_name
+   
     console.log(user.email);
   } catch (error) {
     console.log(error);
   }
-  let imageFile = document.getElementById("img_upload").files[0]
-  console.log(imageFile);
- var img_url = '' 
-  var imageName = `${Date.now}`
+ 
+ var img_url = null 
+ 
   if (imageFile) {
+     var imageName = `${Date.now()}_${imageFile.name}`
 const {  error: uploadError } = await supabase
   .storage
   .from('post')
@@ -291,9 +294,18 @@ const {  error: uploadError } = await supabase
   })
   if (uploadError) {
     console.log(uploadError);
+    alert('Image upload failed')
+    return
   }
-  } else if(img_url){
-    
+  const { data :img_data } = supabase
+  .storage
+  .from('post')
+  .getPublicUrl(imageName)
+  img_url = img_data.publicUrl 
+  console.log(img_data);
+  
+  } else if(cardBg){
+    img_url = cardBg
   }else{
 alert('no img is selected')
   }
@@ -303,10 +315,10 @@ alert('no img is selected')
       if (editId !== null) {
         const { data, error } = await supabase
           .from('Post App Table')
-          .update({ title: title.value, description: description.value, img_bg: cardBg, user_id: user_id, userName: currentUserName })
+          .update({ title: title.value, description: description.value, img_bg: img_url, user_id: user_id, userName: currentUserName })
           .eq('id', editId)
           .select()
-        // window.location.reload()
+        window.location.reload()
         if (error) {
           console.log(error);
         }
@@ -321,9 +333,9 @@ alert('no img is selected')
 
         const { data, error } = await supabase
           .from('Post App Table')
-          .insert({ title: title.value, description: description.value, img_bg: cardBg, email: email, user_id: user_id,userName: currentUserName })
+          .insert({ title: title.value, description: description.value, img_bg: img_url, email: email, user_id: user_id,userName: currentUserName })
           .select('*')
-        // window.location.reload()
+        window.location.reload()
         if (error) {
           console.log(error);
         }
@@ -334,7 +346,7 @@ alert('no img is selected')
       console.log(error);
     }
 
-    // location.reload()
+    location.reload()
 
 
 
@@ -431,6 +443,24 @@ async function deleteComment(event, commentId) {
     console.log(error.message);
   }
 }
+
+
+  function handleUploadPreview(event) {
+    var label = document.getElementById('uploadLabel');
+    var icon = document.getElementById('uploadIcon');
+    var file = event.target.files[0];
+
+    if (file) {
+      label.classList.add('has-file');
+      // swap to a checkmark once a file is chosen
+      icon.innerHTML = '<path d="M20 6L9 17l-5-5"></path>';
+      label.title = file.name;
+    } else {
+      label.classList.remove('has-file');
+      icon.innerHTML = '<path d="M12 3v12"></path><path d="M7 8l5-5 5 5"></path><path d="M5 21h14"></path>';
+      label.title = 'Upload your own image';
+    }
+  }
 
 function selectImg(src) {
   cardBg = src
