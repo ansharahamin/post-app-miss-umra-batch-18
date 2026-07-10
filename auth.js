@@ -93,5 +93,22 @@ const { data } = supabase.auth.onAuthStateChange((event, session) => {
   }
 })
 
+
+async function continueWithGoogle(){
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'http://127.0.0.1:5500/dashboard.html'
+      }
+    })
+    if(error){
+      console.log(error);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 window.register = register;
 window.login = login;
+window.continueWithGoogle = continueWithGoogle
