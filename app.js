@@ -474,3 +474,9 @@ function selectImg(src) {
   event.target.classList.add("selectedImg")
 }
 
+supabase
+  .channel('post_App_channel')
+  .on('postgres_changes', { event: '*', schema: '*',table: 'Post App Table' }, payload => {
+    console.log('Change received!', payload)
+  })
+  .subscribe()
