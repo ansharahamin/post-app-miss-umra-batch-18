@@ -1,128 +1,163 @@
-.navbar{
-    background-color: #ab47bc;
+.navbar {
+  background-color: #ab47bc;
 }
-.navbar-brand{
-    color: white;
+
+.navbar-brand {
+  color: white;
 }
-.navbar-brand:hover{
-    color: white;
+
+.navbar-brand:hover {
+  color: white;
 }
-.card-header{
-    color: #ab47bc;
-    font-weight: bold;
+
+.card-header {
+  color: #ab47bc;
+  font-weight: bold;
 }
-.btn-primary{
-    background-color: #ab47bc;
-    border-color: #ab47bc;
-    width: 100px;
+
+.btn-primary {
+  background-color: #ab47bc;
+  border-color: #ab47bc;
+  width: 100px;
 }
-.btn-primary:hover{
-    background-color: #ab47bc;
-    border-color: #ab47bc;
+
+.btn-primary:hover {
+  background-color: #ab47bc;
+  border-color: #ab47bc;
 }
-.btn-primary:active{
-    background-color: #ab47bc !important;
-    border-color: #ab47bc !important;
+
+.btn-primary:active {
+  background-color: #ab47bc !important;
+  border-color: #ab47bc !important;
 }
-.form-control:focus{
-    border-color: #ab47bc;
-    box-shadow: 0 0 0 0.2rem rgba(171, 71, 188, 0.25) !important;
+
+.form-control:focus {
+  border-color: #ab47bc;
+  box-shadow: 0 0 0 0.2rem rgba(171, 71, 188, 0.25) !important;
 }
-.swal2-confirm{
-     background-color: #ab47bc !important;
-    border-color: #ab47bc !important;
+
+.swal2-confirm {
+  background-color: #ab47bc !important;
+  border-color: #ab47bc !important;
 }
+
 .images img {
-    width: 50px;
-    height: 50px;
-    border-radius: 5px;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
 }
-.selectedImg{
-    border: 2px solid #ab47bc;
+
+.selectedImg {
+  border: 2px solid #ab47bc;
 }
-.images img:hover{
-    cursor: pointer;
-    transform: scale(1.3);
-    transition: 1s;
+
+.images img:hover {
+  cursor: pointer;
+  transform: scale(1.3);
+  transition: 1s;
 }
-.card-body{
-    background-repeat: no-repeat;
-    background-size: cover;
+
+.card-body {
+  background-repeat: no-repeat;
+  background-size: cover;
 }
+
 #MyProfile {
-    width: 50px !important;      
-    height: 50px !important;     
-    border-radius: 50% !important; 
-    background-color: #eef2f5;
-    color: palevioletred;
-    font-size: 24px;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    
-    /* Centers text inside the circle */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    /* Optional: adds a slight shadow */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
-  }
-  
-  /* Optional: changes appearance when clicked */
-  .circle-btn:hover {
-    background-color: #0056b3;
-  }
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  background-color: #eef2f5;
+  color: palevioletred;
+  font-size: 24px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
 
-  .upload-thumb {
-    border: 2px dashed #c9a3d6;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #a855c7;
-    background: #faf5fc;
-    transition: all 0.2s ease;
-  }
+  /* Centers text inside the circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  .upload-thumb:hover {
-    border-color: #a855c7;
-    background: #f3e8f7;
-    color: #7c2d9c;
-    transform: translateY(-2px);
-  }
+  /* Optional: adds a slight shadow */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
 
-  .upload-thumb.has-file {
-    border-style: solid;
-    border-color: #a855c7;
-    background: #a855c7;
-    color: #fff;
-  }
+/* Optional: changes appearance when clicked */
+.circle-btn:hover {
+  background-color: #0056b3;
+}
+
+.upload-thumb {
+  border: 2px dashed #c9a3d6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #a855c7;
+  background: #faf5fc;
+  transition: all 0.2s ease;
+}
+
+.upload-thumb:hover {
+  border-color: #a855c7;
+  background: #f3e8f7;
+  color: #7c2d9c;
+  transform: translateY(-2px);
+}
+
+.upload-thumb.has-file {
+  border-style: solid;
+  border-color: #a855c7;
+  background: #a855c7;
+  color: #fff;
+}
+
 .card-body {
   position: relative;
   background-size: cover;
   background-position: center;
-  color: #fff; /* text hamesha light rahega */
+  color: #fff;
+  /* text hamesha light rahega */
 }
 
 .card-body::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.35) 0%,
-    rgba(0, 0, 0, 0.55) 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.35) 0%,
+      rgba(0, 0, 0, 0.55) 100%);
   z-index: 0;
 }
 
-.card-body > * {
+.card-body>* {
   position: relative;
-  z-index: 1; /* content overlay ke upar aaye */
+  z-index: 1;
+  /* content overlay ke upar aaye */
 }
 
 .card-body .blockquote-footer {
   color: #ddd !important;
+}
+
+.typing-dots {
+  display: inline-block;
+  animation: blink 1.4s infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  20% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
 }

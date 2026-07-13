@@ -16,7 +16,7 @@ window.onload = async function () {
     if (user) {
       currentUserId = user.id;
       currentUserName = user.user_metadata.first_name
-     var firstLetter = currentUserName.charAt(0); 
+      var firstLetter = currentUserName.charAt(0);
       console.log(currentUserName);
       console.log("Current User ID:", currentUserId);
       var user_info = document.getElementById('MyProfile')
@@ -48,6 +48,7 @@ window.onload = async function () {
   const { data: likes } = await supabase.from('Likes').select('*')
   const { data: comments } = await supabase.from('Comments').select('*').order('created_at', { ascending: true })
   renderPosts(posts, likes || [], comments || [])
+   setupGlobalTypingListener()
 }
 
 function renderPosts(posts, likes, comments) {
@@ -98,7 +99,10 @@ function renderPosts(posts, likes, comments) {
           ${commentsHtml}
         </div>
         <div class="d-flex gap-1 mt-1">
-          <input type="text" id="comment-input-${post.id}" class="form-control form-control-sm" placeholder="Add a comment...">
+          <input type="text" id="comment-input-${post.id}" class="form-control form-control-sm" placeholder="Add a comment..." oninput="handleTyping(${post.id})">
+          <div id="typing-indicator-${post.id}" class="text-muted small" style="display:none; font-style:italic;">
+  <span class="typing-dots">●●●</span> typing...
+</div>
           <button onclick="addComment(event, ${post.id})" class="btn btn-sm btn-primary">Send</button>
         </div>
       </div>
@@ -136,7 +140,7 @@ async function search() {
       // .ilike('title', `%${searchInput}%`)
       .or(`title.ilike.%${searchInput}%,description.ilike.%${searchInput}%, email.ilike.%${searchInput}%,userName.ilike.%${searchInput}%`)
     console.log(posts);
-    if(posts.length === 0) {
+    if (posts.length === 0) {
       console.log("No posts found.");
       Swal.fire({
         icon: "info",
@@ -248,24 +252,32 @@ async function deletePost(event, id) {
 
 }
 async function editPost(event, id) {
-  var card = event.target.parentNode.parentNode
-  var title = card.children[1].children[0].children[0].children[0].innerText
-  var description = card.children[1].children[0].children[1].innerText
-  document.getElementById("title").value = title
-  document.getElementById("description").value = description
-  editId = id
+try{
+const {data , error} = await supabase.from('Post App Table').select('*').eq('id' , id).single()
+   if (error || !data) {
+      console.log(error)
+      Swal.fire({ icon: "error", title: "Oops...", text: "Could not load post for editing." });
+      return
+    }
+      document.getElementById("title").value = data.title
+    document.getElementById("description").value = data.description
+    cardBg = data.img_bg   // agar image change nahi kar rahe to purani img_bg use ho jayegi
 
-  document.getElementById("post_btn").innerText = 'update post'
+    editId = id
+    document.getElementById("post_btn").innerText = 'update post'
+   var card = document.getElementById(`post-${id}`)
+    if (card) card.remove()
+}catch(error){
+console.log(error.message);
 
-  console.log(title, description);
-  card.remove()
+}
 }
 async function post() {
   var title = document.getElementById("title")
   var description = document.getElementById("description")
   console.log(title.value, description.value);
   var posts = document.getElementById("posts")
-    let imageFile = document.getElementById("img_upload").files[0]
+  let imageFile = document.getElementById("img_upload").files[0]
   console.log(imageFile);
   try {
     const { data: { user }, error } = await supabase.auth.getUser()
@@ -275,39 +287,39 @@ async function post() {
     email = user.email
     user_id = user.id
     currentUserName = user.user_metadata.first_name
-   
+
     console.log(user.email);
   } catch (error) {
     console.log(error);
   }
- 
- var img_url = null 
- 
+
+  var img_url = null
+
   if (imageFile) {
-     var imageName = `${Date.now()}_${imageFile.name}`
-const {  error: uploadError } = await supabase
-  .storage
-  .from('post')
-  .upload(imageName, imageFile, {
-    cacheControl: '3600',
-    upsert: false
-  })
-  if (uploadError) {
-    console.log(uploadError);
-    alert('Image upload failed')
-    return
-  }
-  const { data :img_data } = supabase
-  .storage
-  .from('post')
-  .getPublicUrl(imageName)
-  img_url = img_data.publicUrl 
-  console.log(img_data);
-  
-  } else if(cardBg){
+    var imageName = `${Date.now()}_${imageFile.name}`
+    const { error: uploadError } = await supabase
+      .storage
+      .from('post')
+      .upload(imageName, imageFile, {
+        cacheControl: '3600',
+        upsert: false
+      })
+    if (uploadError) {
+      console.log(uploadError);
+      alert('Image upload failed')
+      return
+    }
+    const { data: img_data } = supabase
+      .storage
+      .from('post')
+      .getPublicUrl(imageName)
+    img_url = img_data.publicUrl
+    console.log(img_data);
+
+  } else if (cardBg) {
     img_url = cardBg
-  }else{
-alert('no img is selected')
+  } else {
+    alert('no img is selected')
   }
   if (title.value.trim() && description.value.trim()) {
     try {
@@ -318,7 +330,8 @@ alert('no img is selected')
           .update({ title: title.value, description: description.value, img_bg: img_url, user_id: user_id, userName: currentUserName })
           .eq('id', editId)
           .select()
-        window.location.reload()
+ await refreshAllData()
+        // window.location.reload()
         if (error) {
           console.log(error);
         }
@@ -333,9 +346,10 @@ alert('no img is selected')
 
         const { data, error } = await supabase
           .from('Post App Table')
-          .insert({ title: title.value, description: description.value, img_bg: img_url, email: email, user_id: user_id,userName: currentUserName })
+          .insert({ title: title.value, description: description.value, img_bg: img_url, email: email, user_id: user_id, userName: currentUserName })
           .select('*')
-        window.location.reload()
+await refreshAllData()
+        // window.location.reload()
         if (error) {
           console.log(error);
         }
@@ -346,7 +360,7 @@ alert('no img is selected')
       console.log(error);
     }
 
-    location.reload()
+    // location.reload()
 
 
 
@@ -385,8 +399,11 @@ async function toggleLike(event, postId) {
       const { data, error } = await supabase
         .from('Likes')
         .insert({ post_id: postId, user_id: currentUserId })
+
     }
-    location.reload()
+await refreshAllData()
+
+    // location.reload()
   } catch (error) {
     console.log(error.message);
   }
@@ -408,7 +425,7 @@ async function addComment(event, postId) {
     Swal.fire({ icon: "error", title: "Oops...", text: "Comment can't be empty!" });
     return
   }
-  location.reload()
+await refreshAllData()
   try {
     const { error } = await supabase
       .from('Comments')
@@ -425,42 +442,43 @@ async function addComment(event, postId) {
   }
 }
 async function deleteComment(event, commentId) {
-  try{
+  try {
     const { data, error } = await supabase
-    .from('Comments')
-    .delete()
-    .eq('id', commentId)
+      .from('Comments')
+      .delete()
+      .eq('id', commentId)
     if (error) {
       console.log(error);
       Swal.fire({ icon: "error", title: "Oops...", text: "Failed to delete comment!" });
       return
     }
-    if(!data || data.length === 0 ){
+    if (!data || data.length === 0) {
       Swal.fire({ icon: "error", title: "Not allowed", text: "You can only delete your own comments!" });
     }
-    location.reload()
-  }catch(error){
+ await refreshAllData()
+    // location.reload()
+  } catch (error) {
     console.log(error.message);
   }
 }
 
 
-  function handleUploadPreview(event) {
-    var label = document.getElementById('uploadLabel');
-    var icon = document.getElementById('uploadIcon');
-    var file = event.target.files[0];
+function handleUploadPreview(event) {
+  var label = document.getElementById('uploadLabel');
+  var icon = document.getElementById('uploadIcon');
+  var file = event.target.files[0];
 
-    if (file) {
-      label.classList.add('has-file');
-      // swap to a checkmark once a file is chosen
-      icon.innerHTML = '<path d="M20 6L9 17l-5-5"></path>';
-      label.title = file.name;
-    } else {
-      label.classList.remove('has-file');
-      icon.innerHTML = '<path d="M12 3v12"></path><path d="M7 8l5-5 5 5"></path><path d="M5 21h14"></path>';
-      label.title = 'Upload your own image';
-    }
+  if (file) {
+    label.classList.add('has-file');
+    // swap to a checkmark once a file is chosen
+    icon.innerHTML = '<path d="M20 6L9 17l-5-5"></path>';
+    label.title = file.name;
+  } else {
+    label.classList.remove('has-file');
+    icon.innerHTML = '<path d="M12 3v12"></path><path d="M7 8l5-5 5 5"></path><path d="M5 21h14"></path>';
+    label.title = 'Upload your own image';
   }
+}
 
 function selectImg(src) {
   cardBg = src
@@ -474,9 +492,67 @@ function selectImg(src) {
   event.target.classList.add("selectedImg")
 }
 
+var typingChannel = null
+
+function setupGlobalTypingListener() {
+  if (typingChannel) return   // already subscribed hai to dobara mat karo
+
+  typingChannel = supabase.channel('typing-global')
+    .on('broadcast', { event: 'typing' }, (payload) => {
+      var data = payload.payload
+      if (data.user_id === currentUserId) return   // apni khud ki typing ignore karo
+
+      var indicator = document.getElementById(`typing-indicator-${data.postId}`)
+      if (!indicator) return
+
+      indicator.innerHTML = `<span class="typing-dots">●●●</span> ${data.userName || 'Someone'} is typing...`
+      indicator.style.display = 'block'
+
+      clearTimeout(indicator.hideTimer)
+      indicator.hideTimer = setTimeout(() => {
+        indicator.style.display = 'none'
+      }, 2000)
+    })
+    .subscribe()
+}
+
+function handleTyping(postId) {
+  if (!currentUserId || !typingChannel) return
+
+  typingChannel.send({
+    type: 'broadcast',
+    event: 'typing',
+    payload: { user_id: currentUserId, userName: currentUserName, postId: postId }
+  })
+}
+async function refreshAllData() {
+  const { data: posts, error: postsError } = await supabase
+    .from('Post App Table')
+    .select('*')
+    .order('id', { ascending: false })
+
+  const { data: likes } = await supabase.from('Likes').select('*')
+  const { data: comments } = await supabase.from('Comments').select('*').order('created_at', { ascending: true })
+
+  if (postsError) {
+    console.log(postsError.message)
+    return
+  }
+  renderPosts(posts || [], likes || [], comments || [])
+}
+
 supabase
   .channel('post_App_channel')
-  .on('postgres_changes', { event: '*', schema: '*',table: 'Post App Table' }, payload => {
-    console.log('Change received!', payload)
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'Post App Table' }, (payload) => {
+    console.log('Post change received!', payload)
+    refreshAllData()
+  })
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'Comments' }, (payload) => {
+    console.log('Comment change received!', payload)
+    refreshAllData()
+  })
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'Likes' }, (payload) => {
+    console.log('Like change received!', payload)
+    refreshAllData()
   })
   .subscribe()
