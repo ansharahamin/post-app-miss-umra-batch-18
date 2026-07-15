@@ -37,12 +37,12 @@ async function register() {
             first_name: name,
             phone: phone,
             password:password,
-            role: 'user'
+            role : 'admin'
           }
         }
       })
       console.log(data);
-      window.location.href="/dashboard.html"
+      window.location.href="./AdminPanel.html"
       if (error) {
         alert(error);
       }
@@ -50,8 +50,8 @@ async function register() {
       console.log(error.email);
     }
 
-    window.location.href="/dashboard.html"
-  }
+    window.location.href="./AdminPanel.html"
+}
 
 
 
@@ -68,7 +68,7 @@ async function login() {
       password: loginPass,
     })
     console.log(data);
-    window.location.href = "/dashboard.html"
+    window.location.href="./AdminPanel.html"
     if (error) {
       alert(error)
     }
@@ -100,7 +100,7 @@ async function continueWithGoogle(){
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'http://127.0.0.1:5500/dashboard.html'
+        redirectTo: 'http://127.0.0.1:5500/AdminPanel.html'
       }
     })
     if(error){

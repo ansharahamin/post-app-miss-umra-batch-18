@@ -9,6 +9,7 @@ var user_id;
 var currentUserId = null;
 var currentUserEmail = null;
 var currentUserName = null
+var role = null
 window.onload = async function () {
 
   try {
@@ -16,6 +17,7 @@ window.onload = async function () {
     if (user) {
       currentUserId = user.id;
       currentUserName = user.user_metadata.first_name
+      role = user.user_metadata.role
       var firstLetter = currentUserName.charAt(0);
       console.log(currentUserName);
       console.log("Current User ID:", currentUserId);
@@ -287,7 +289,7 @@ async function post() {
     email = user.email
     user_id = user.id
     currentUserName = user.user_metadata.first_name
-
+    role = user.user_metadata.role
     console.log(user.email);
   } catch (error) {
     console.log(error);
@@ -327,7 +329,7 @@ async function post() {
       if (editId !== null) {
         const { data, error } = await supabase
           .from('Post App Table')
-          .update({ title: title.value, description: description.value, img_bg: img_url, user_id: user_id, userName: currentUserName })
+          .update({ title: title.value, description: description.value, img_bg: img_url, user_id: user_id, userName: currentUserName, role:role })
           .eq('id', editId)
           .select()
  await refreshAllData()
@@ -346,7 +348,7 @@ async function post() {
 
         const { data, error } = await supabase
           .from('Post App Table')
-          .insert({ title: title.value, description: description.value, img_bg: img_url, email: email, user_id: user_id, userName: currentUserName })
+          .insert({ title: title.value, description: description.value, img_bg: img_url, email: email, user_id: user_id, userName: currentUserName,role:role })
           .select('*')
 await refreshAllData()
         // window.location.reload()
