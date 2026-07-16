@@ -78,21 +78,21 @@ async function login() {
 
 
 }
-const { data } = supabase.auth.onAuthStateChange((event, session) => {
-  console.log(event, session)
-  if (event === 'INITIAL_SESSION') {
-    if (!session) {
-      alert('user not found!')
-    }
-  } else if (event === 'SIGNED_IN') {
-    alert('user signed in successfully')
-    // window.location.href = './dashboard.html'
-  } else if (event === 'SIGNED_OUT') {
-    alert('user signed out!!')
-    session = null
-    window.location.href = './index.html'
-  }
-})
+// const { data } = supabase.auth.onAuthStateChange((event, session) => {
+//   console.log(event, session)
+//   if (event === 'INITIAL_SESSION') {
+//     if (!session) {
+//       alert('user not found!')
+//     }
+//   } else if (event === 'SIGNED_IN') {
+//     alert('user signed in successfully')
+//     // window.location.href = './dashboard.html'
+//   } else if (event === 'SIGNED_OUT') {
+//     alert('user signed out!!')
+//     session = null
+//     window.location.href = './index.html'
+//   }
+// })
 
 
 async function continueWithGoogle(){

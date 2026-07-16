@@ -41,11 +41,11 @@ async function register() {
           }
         }
       })
-      console.log(data);
-      window.location.href="./AdminPanel.html"
+     
       if (error) {
         alert(error);
       }
+      console.log("Session after signup:", data.session);
     } catch (error) {
       console.log(error.email);
     }
@@ -67,11 +67,13 @@ async function login() {
       email: loginEmail,
       password: loginPass,
     })
-    console.log(data);
-    window.location.href="./AdminPanel.html"
+  
     if (error) {
       alert(error)
+      return
     }
+      console.log(data);
+    window.location.href="./AdminPanel.html"
   } catch (error) {
     console.log(error);
   }

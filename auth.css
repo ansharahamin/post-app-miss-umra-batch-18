@@ -10,7 +10,7 @@ body{
 }
 .main{
 	width: 350px;
-	height: 556px;
+	height: 590px;
 	background: red;
 	overflow: hidden;
 	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
@@ -30,14 +30,14 @@ label{
 	font-size: 2.3em;
 	justify-content: center;
 	display: flex;
-	margin: 50px;
+	margin: 45px;
 	font-weight: bold;
 	cursor: pointer;
 	transition: .5s ease-in-out;
 }
 input{
 	width: 60%;
-	height: 10px;
+	height: 7px;
 	background: #e0dede;
 	justify-content: center;
 	display: flex;
@@ -48,8 +48,8 @@ input{
 	border-radius: 5px;
 }
 button{
-	width: 60%;
-	height: 40px;
+	width: 70%;
+	height: 35px;
 	margin: 10px auto;
 	justify-content: center;
 	display: block;
@@ -57,7 +57,6 @@ button{
 	background: #573b8a;
 	font-size: 1em;
 	font-weight: bold;
-	margin-top: 30px;
 	outline: none;
 	border: none;
 	border-radius: 5px;
