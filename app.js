@@ -76,7 +76,7 @@ function renderPosts(posts, likes, comments) {
 
     postsDiv.innerHTML += `
     <div class="card mb-2" id="post-${post.id}">
-      <div class="card-header">${post.id} : ${post.userName} </div>
+      <div class="card-header" id="username">${post.id} : ${post.userName} </div>
       <div class="card-header f-2 text-secondary"> ${post.email} </div>
       <div style="background-image:url(${post.img_bg})" class="card-body">
         <figure>
@@ -118,7 +118,40 @@ function renderPosts(posts, likes, comments) {
     </div>
     `
   })
+  postCardAnimation()
 }
+var tl = gsap.timeline()
+function postCardAnimation() {
+  gsap.from('.card',{
+    opacity:0,
+    y:100,
+    stagger:0.5,
+    delay:1,
+    duration:1,
+    scale:0.8,
+    scrollTrigger:{
+      trigger:''
+    }
+
+  })
+  tl.from('.card-header',{
+    opacity:0,
+    y:100,
+    stagger:0.5,
+    duration:1,
+    scale:0.8
+  })
+ gsap.from('.card-body',{
+    opacity:0,
+    y:100,
+    stagger:0.5,
+    duration:1,
+    scale:0.8
+  })
+
+
+}
+
 async function search() {
   var searchInput = document.getElementById('searchInput').value
   try {
